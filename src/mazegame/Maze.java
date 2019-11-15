@@ -9,7 +9,7 @@ package mazegame;
  *
  * @author Can Lin & Marik Rogenski
  */
-
+// Test
 import java.util.*;
 
 public class Maze {
