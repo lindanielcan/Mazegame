@@ -140,8 +140,8 @@ public class Maze {
         for(int i=0; i < ((num_rows+num_cols)/2*3/4); i++) {
             int rand_row = rand.nextInt(num_rows); 
             int rand_col = rand.nextInt(num_cols); 
-            //int randomType = rand.nextInt(8);
-            Treasures[rand_row][rand_col].setTreasure((num_rows+num_cols)/2*3/4); // Torch
+            int randomType = rand.nextInt(8);
+            Treasures[rand_row][rand_col].setTreasure(randomType+1); // Torch
         }
         
         // Randomize Traps.
@@ -218,10 +218,9 @@ public class Maze {
         }
         
         if (direction == 'T') {
-            if (Treasures[row_pos][col_pos].getTreasure() > 0) {
+            if (Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure() > 0) {
                 
-                int randomType = rand.nextInt(8);
-                addInventory(randomType+1);
+                addInventory(Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure());
             }
             else
             {
@@ -271,9 +270,9 @@ public class Maze {
     public void addInventory(int type) {
         int randomType = rand.nextInt(8);
         type = randomType;
-        System.out.println("Taking the Treasure "  + Treasures[row_pos][col_pos].showTreasure(randomType+1) + ".");
+        System.out.println("Taking the Treasure "  + Treasures[row_pos][col_pos].showTreasure(Treasures[row_pos][col_pos].getTreasure()) + ".");
         
-        Inventory[numInventory] = randomType+1;
+        Inventory[numInventory] = Treasures[row_pos][col_pos].getTreasure();
         numInventory++;
         
         Treasures[row_pos][col_pos].setTreasure(0);
@@ -292,12 +291,21 @@ public class Maze {
         return blnResult;
     }
     
+    public void checkBoard() {
+        if (Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure() > 0) {
+            System.out.println("You have found a " + Treasures[0][0].showTreasure(Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure()));
+        }
+    }
+    
     public void playGame() {
         loadBoard();
            
         do {
             // Draw the maze
             drawBoard();
+            
+            // Check to see if the player encountered anything
+            checkBoard();
 
             // Get the player's move
             getMove();
