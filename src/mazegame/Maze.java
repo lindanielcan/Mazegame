@@ -22,28 +22,13 @@ public class Maze {
     protected Room[][] Board; //  = new Room[10][10];
     protected Treasure[][] Treasures; // = new int[NUM_ROWS][NUM_COLS]; // T = Treasure
     protected Opponent[][] Opponents; // = new int[NUM_ROWS][NUM_COLS]; // O = Opponent
-    protected Trap[][] Traps; // = new int[NUM_ROWS][NUM_COLS];     // Z = Trap
-    protected Player[][] player1; // P = Player 
-    protected Store[][] store1; // S = Store
+    protected Trap[][] Traps; // = new int[NUM_ROWS][NUM_COLS];     // Z = Trap 
+    protected Store[][] Stores; // S = Store
+    protected Player player = new Player();
     
     protected int[] Inventory = new int[100];
     public int numInventory;
     
-//    public int storeAddressRow = 0;
-//    public int storeAddressCol = 0;
-//    protected static int numTreasures = 0;
-//    protected static int numOpponents = 0;
-//    protected static int numTraps = 0;
-//    protected static int numStores = 0;
-    protected int[] rowTreasureContainer;
-    protected int[] colTreasureContainer;
-    protected int[] rowOpponentContainer;
-    protected int[] colOpponentContainer;
-    protected int[] rowTrapContainer;
-    protected int[] colTrapContainer;
-    protected int[] rowStoreContainer;
-    protected int[] colStoreContainer;
-    //protected Boolean checkKeys;
     public Boolean gameOver = false;
             
 
@@ -59,28 +44,19 @@ public class Maze {
         
         num_rows = max_rows;
         num_cols = max_cols;
-        rowTreasureContainer = new int[num_rows];
-        colTreasureContainer = new int[num_cols];
-        rowOpponentContainer = new int[num_rows];
-        colOpponentContainer = new int[num_cols];
-        rowTrapContainer = new int[num_rows];
-        colTrapContainer = new int[num_cols];
-        rowStoreContainer = new int[num_rows];
-        colStoreContainer = new int[num_cols];
         
         Board = new Room[num_rows][num_cols];
         Treasures = new Treasure[num_rows][num_cols]; // T = Treasure
         Opponents = new Opponent[num_rows][num_cols]; // O = Opponent
         Traps = new Trap[num_rows][num_cols];     // Z = Trap
-        player1 = new Player[num_rows][num_cols]; // P = Player
-        store1 = new Store[num_rows][num_cols]; // P = Player
+        Stores = new Store[num_rows][num_cols]; // S = Store
         numInventory = 0;
 
-                
-        playGame();
     }
     
     public void drawBoard() {
+        col_pos = player.getCol_pos();
+        row_pos = player.getRow_pos();
        
         for (int i = 0; i < num_cols * 4 ; i++) {
             System.out.print("--");
@@ -96,121 +72,40 @@ public class Maze {
                 System.out.print("| ");
                 
                 // Player
-                if (row == player1[row_pos][col_pos].getRow_pos() && col == player1[row_pos][col_pos].getCol_pos()) {
-                    System.out.print("P");//+ player1[row_pos][col_pos].getRow_pos()+ player1[row_pos][col_pos].getCol_pos());
-                }
-                
-                else
-                {
+                if (row == row_pos && col == col_pos) {
+                    System.out.print("P");
+                } else {
                     System.out.print(" ");
                 }           
                 
+                // Tresures
                 if (Treasures[row][col].getTreasure() > 0) {
                     System.out.print("T");
-                    //Use two arrays that contain locations of treasures to munipulate treasures.
-//                    while(true){
-//                        rowTreasureContainer[numTreasures] = row;
-//                        colTreasureContainer[numTreasures] = col;
-//                        break;
-//                    }
-//                    rowTreasureContainer[numTreasures] = row;
-//                    colTreasureContainer[numTreasures] = col;
-                    //System.out.print(row+"" + col + "" + rowTreasureContainer[numTreasures]+""+colTreasureContainer[numTreasures]);
-//                    numTreasures++;
-                }
-                else
-                {
+                } else {
                     System.out.print(" ");
-                }             
+                }     
                 
-                //if (Treasures[row][col].getTreasure() > 0) {
-                    
-//                    if(player1[row_pos][col_pos].getRow_pos() == row
-//                        && player1[row_pos][col_pos].getCol_pos() == col
-//                        && move == 'T'){
-//                        rowAddressContainer[storeAddressRow] = row;
-//                        storeAddressRow++;
-//                        colAddressContainer[storeAddressCol] = col;
-//                        storeAddressCol++;
-//                        System.out.print(" ");
-//                        for(int i=0; i<((num_rows+num_cols)*3/4);i++){
-//                            if(rowAddressContainer[i] == row && colAddressContainer[i] == col){checkKeys = true;}
-//                            else{
-//                                checkKeys = false;
-//                            }
-//                        }
-//                        if(checkKeys){
-//                            System.out.print(" ");
-//                        }
-//                        if(checkKeys = false){
-//                            System.out.print("T");
-//                        }
-//                      }
-//                    else{
-//                         System.out.print(" ");
-                    //}
-//                    
-                //}
-//if (Treasures[row][col].getTreasure() > 0) {
-//                    if(player1[row_pos][col_pos].getRow_pos() == Treasures[row_pos][col_pos].getRow_pos()
-//                    && player1[row_pos][col_pos].getCol_pos() == Treasures[row_pos][col_pos].getCol_pos()
-//                    && move == 'T'){
-//                        rowAddressContainer[storeAddressRow] = player1[row_pos][col_pos].getRow_pos();
-//                        storeAddressRow++;
-//                        colAddressContainer[storeAddressCol] = player1[row_pos][col_pos].getCol_pos();
-//                        storeAddressCol++;
-//                        
-//                        //System.out.print(" ");
-//                        for(int i=0; i<((num_rows+num_cols)*3/4);i++){
-//                            if(rowAddressContainer[i] == Treasures[row_pos][col_pos].getRow_pos()&&
-//                                    colAddressContainer[i] == Treasures[row_pos][col_pos].getCol_pos()){checkKeys = true;}
-//                            else{
-//                                checkKeys = false;
-//                            }
-//                        }
-//                        if(checkKeys == true){
-//                            System.out.print(" ");
-//                        }
-//                        
-//                }
-                //else{
-                    //System.out.print(" ");
-                //}          
-                 
                 // Opponents
                 if (Opponents[row][col].getOpponent() > 0) {
                     System.out.print("O");
-//                    rowOpponentContainer[numOpponents] = row;
-//                    colOpponentContainer[numOpponents] = col;
-//                    numOpponents++;
-                }
-                else
-                {
+                } else {
                     System.out.print(" ");
                 } 
                 
                 // Traps
                 if (Traps[row][col].getTrap() > 0) {
                     System.out.print("Z");
-//                    rowTrapContainer[numTraps] = row;
-//                    colTrapContainer[numTraps] = col;
-//                    numTraps++;
-                }
-                else
-                {
+                } else {
                     System.out.print(" ");
                 }                 
                 
-                if (store1[row][col].getStore() > 0) {
+                // Stores
+                if (Stores[row][col].getStore() > 0) {
                     System.out.print("S");
-//                    rowStoreContainer[numStores] = row;
-//                    rowStoreContainer[numStores] = col;
-//                    numStores++;
-                }
-                else
-                {
+                } else {
                     System.out.print(" ");
-                }        
+                } 
+                
                 System.out.print(" ");
                 
             }
@@ -227,72 +122,47 @@ public class Maze {
     }
     
     public void loadBoard() {
-        // Set Player Position
-
+        
         // Initialize Rooms,Treasures,Opponent,Traps,Player,Store.
         for (int row = 0; row < num_rows;  row++) {
             for (int col = 0; col < num_cols; col++) {
-                row_pos = row;
-                col_pos = col;
-                Board[row_pos][col_pos] = new Room();
-                Treasures[row_pos][col_pos] = new Treasure();
-                Opponents[row_pos][col_pos] = new Opponent();
-                Traps[row_pos][col_pos] = new Trap();
-                player1[row_pos][col_pos] = new Player();
-                store1[row_pos][col_pos] = new Store();
+                Board[row][col] = new Room();
+                Treasures[row][col] = new Treasure();
+                Opponents[row][col] = new Opponent();
+                Traps[row][col] = new Trap();
+                Stores[row][col] = new Store();
             }            
         }
      
         
         // Initialize the board
         // Randomize Treasures.
-        for(int i=0; i< ((num_rows+num_cols)/2*3/4);i++){
+        for(int i=0; i < ((num_rows+num_cols)/2*3/4); i++) {
             int rand_row = rand.nextInt(num_rows); 
             int rand_col = rand.nextInt(num_cols); 
-            //int randomType = rand.nextInt(8);
-            Treasures[rand_row][rand_col].setTreasure((num_rows+num_cols)/2*3/4); // Torch
-            rowTreasureContainer[i] = rand_row;
-            colTreasureContainer[i] = rand_col;
+            int randomType = rand.nextInt(8);
+            Treasures[rand_row][rand_col].setTreasure(randomType+1); // Torch
         }
-        //if(player1[row_pos][col_pos] == Treasures[row_pos][col_pos]){
-                        //System.out.print(" ");
-                        //rowAddressContainer[storeAddressRow] = row_pos;
-                        //storeAddressRow++;
-                        //colAddressContainer[storeAddressCol] = col_pos;
-                        //storeAddressCol++;
-                        //for(int i=0; i<(((num_rows+num_cols)*3/4));i++){
-                            //if (row_pos == rowAddressContainer[i]&& col_pos == colAddressContainer[i]){
-                                //return true;
-                            //}
-                        //}
-                        //return false;
-                    //}
         
         // Randomize Traps.
         for(int i=0; i< ((num_rows+num_cols)/4);i++){
             int rand_row = rand.nextInt(num_rows); 
             int rand_col = rand.nextInt(num_cols); 
-            Traps[rand_row][rand_col].setTrap((num_rows+num_cols)/4); 
-            rowTrapContainer[i] = rand_row;
-            colTrapContainer[i] = rand_col;
+            Traps[rand_row][rand_col].setTrap((num_rows+num_cols)/4);
         }
 
         // Randomize Opponents.
         for(int i=0; i< ((num_rows+num_cols)/4);i++){
             int rand_row = rand.nextInt(num_rows); 
             int rand_col = rand.nextInt(num_cols); 
-            Opponents[rand_row][rand_col].setOpponent((num_rows+num_cols)/4); 
-            rowOpponentContainer[i] = rand_row;
-            colOpponentContainer[i] = rand_col;
+            Opponents[rand_row][rand_col].setOpponent((num_rows+num_cols)/4);
         }
 
         // Randomize stores.
         for(int i=0; i< ((num_rows+num_cols)/3);i++){
             int rand_row = rand.nextInt(num_rows); 
             int rand_col = rand.nextInt(num_cols); 
-            store1[rand_row][rand_col].setStore((num_rows+num_cols)/3); 
-            rowStoreContainer[i] = rand_row;
-            colStoreContainer[i] = rand_col;
+            Stores[rand_row][rand_col].setStore((num_rows+num_cols)/3);
         }
         
         //Directions
@@ -308,46 +178,25 @@ public class Maze {
         
         move = input.next(".").charAt(0);
         move = Character.toUpperCase(move);
-        //testing:show keys in the Inventory.
-//        for(int i=0; i< Inventory.length;i++){
-//            if(Inventory[i]!=0){
-//            System.out.println(Inventory[i]);}
-//            if(Inventory[i]!=0){
-//            System.out.print("");
-//            }
-        //}
-
-        //System.out.println(player1[row_pos][col_pos].getRow_pos());
-        //System.out.println(player1[row_pos][col_pos].getCol_pos());
-        //System.out.println(Treasures[row_pos][col_pos].getRow_pos());
-        //System.out.println(Treasures[row_pos][col_pos].getCol_pos());
+        
     }
-    
-//    public Boolean isInArray (int arr[], int size, int key) {
-//        for(int i=0; i<(size);i++){
-//            if (key == arr[i]){
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
     
     public Boolean validMove(char direction) {
         Boolean isValid = false;
         
-        if (direction == 'U' && player1[row_pos][col_pos].getRow_pos() > 0 && Board[row_pos][col_pos].moveUp) {
+        if (direction == 'U' && player.getRow_pos() > 0) {
             isValid = true;
         }
         
-        if (direction == 'D' && player1[row_pos][col_pos].getRow_pos() < num_rows - 1 && Board[row_pos][col_pos].moveDown) {
+        if (direction == 'D' && player.getCol_pos() < num_rows - 1) {
             isValid = true;
         }
 
-        if (direction == 'L' && player1[row_pos][col_pos].getCol_pos() > 0&& Board[row_pos][col_pos].moveLeft) {
+        if (direction == 'L' && player.getCol_pos() > 0) {
             isValid = true;
         }
 
-        if (direction == 'R' && player1[row_pos][col_pos].getCol_pos() < num_cols - 1 && Board[row_pos][col_pos].moveRight) {
+        if (direction == 'R' && player.getCol_pos() < num_cols - 1) {
             isValid = true;
         }
         
@@ -366,15 +215,12 @@ public class Maze {
             }
             
             isValid = true;
-        }        
-        //if(direction == 'W'){System.out.println(Treasures[row_pos][col_pos].getTreasure());}
+        }
+        
         if (direction == 'T') {
-            if (Treasures[player1[row_pos][col_pos].getRow_pos()][player1[row_pos][col_pos].getCol_pos()].getTreasure() > 0){
-                    //isInArray(rowTreasureContainer,numTreasures,player1[row_pos][col_pos].getRow_pos())&&
-                    //isInArray(colTreasureContainer,numTreasures,player1[row_pos][col_pos].getCol_pos())) {
-                // Take the Treasure
-                int randomType = rand.nextInt(8);
-                addInventory(randomType+1);                
+            if (Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure() > 0) {
+                
+                addInventory(Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure());
             }
             else
             {
@@ -382,25 +228,24 @@ public class Maze {
             }
         
             isValid = true;
-            //System.out.println(  " - " + Treasures[row_pos][col_pos].showTreasure(2));
         }            
             
         if (direction == 'Q') {
             isValid = true;
+            gameOver = true;
+            
         }
         
         if (direction == 'F') {
             int randMonster = rand.nextInt(8);
             //Opponents[player1[row_pos][col_pos].getRow_pos()][player1[row_pos][col_pos].getCol_pos()].setOpponent(randMonster+1);
-            if (Opponents[player1[row_pos][col_pos].getRow_pos()][player1[row_pos][col_pos].getCol_pos()].getOpponent() > 0) {
+            if (Opponents[row_pos][col_pos].getOpponent() > 0) {
                 // Fighting The Opponent
                 System.out.println("Fighting the " + Opponents[row_pos][col_pos].showOpponent(randMonster+1));
                 
                 // Must have a sword and a shield
                 if (searchInventory(2) && searchInventory(6) ) {
-                    System.out.println("You have defeated the " + Opponents[player1[row_pos][col_pos].getRow_pos()]
-                            [player1[row_pos][col_pos].getCol_pos()]
-                            .showOpponent(Opponents[row_pos][col_pos].getOpponent()));
+                    System.out.println("You have defeated the " + Opponents[row_pos][col_pos].showOpponent(Opponents[row_pos][col_pos].getOpponent()));
                 }
                 else
                 {
@@ -425,14 +270,12 @@ public class Maze {
     public void addInventory(int type) {
         int randomType = rand.nextInt(8);
         type = randomType;
-        System.out.println("Taking the Treasure "  + Treasures[player1[row_pos][col_pos].getRow_pos()]
-                [player1[row_pos][col_pos].getCol_pos()].showTreasure(randomType+1) + ".");
+        System.out.println("Taking the Treasure "  + Treasures[row_pos][col_pos].showTreasure(Treasures[row_pos][col_pos].getTreasure()) + ".");
         
-        Inventory[numInventory] = randomType+1;
+        Inventory[numInventory] = Treasures[row_pos][col_pos].getTreasure();
         numInventory++;
-        //Random rand = new Random();
-        //int randint = rand.nextInt(7);
-        //Treasures[row_pos][col_pos].setTreasure(randint+1);//Randomize treasure from type 1 to type 8.
+        
+        Treasures[row_pos][col_pos].setTreasure(0);
     }
     
     
@@ -448,54 +291,48 @@ public class Maze {
         return blnResult;
     }
     
-    public void playGame() {
-        // Initialze the Maze
-        //loadBoard();
-        Scanner myObj = new Scanner(System.in);
-        char playAgain = 'y';
-        
-        while(gameOver == false){
-            loadBoard();
-        //do{
-        // Play the game        
-            do {
-                // Draw the maze
-                drawBoard();
-               
-                // Get the player's move
-                getMove();
-                
-                // Validate the move and move accordingly
-                if (validMove(move)) {
-                
-                  // Move the Player   
-                  if (move == 'U') {
-                      player1[row_pos][col_pos].moveUp();
-                  }
-              
-                  if (move == 'D') {
-                      player1[row_pos][col_pos].moveDown();
-                  }
-                
-                  if (move == 'L') {
-                      player1[row_pos][col_pos].moveLeft();
-                  }
-
-                  if (move == 'R') {
-                      player1[row_pos][col_pos].moveRight();
-                  }
-                  
-                  if(move == 'U'&&move == 'D'&&move == 'L'&&move == 'R'&&move == 'I'&&move == 'T'&&move == 'Q'&&move == 'F'){
-                      System.out.println("Invalid move: Please try again.");
-                  }
-                } 
-                } while (!gameOver && move != 'Q');
-            System.out.println("Do you want to play again? Type y or something else.");
-            playAgain = input.next(".").charAt(0);
-            playAgain = Character.toUpperCase(move);
-            //Somehow when the player enter y for playAgain, it returns F for playAgain.
-            if(playAgain == 'F'){gameOver = false;}
+    public void checkBoard() {
+        if (Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure() > 0) {
+            System.out.println("You have found a " + Treasures[0][0].showTreasure(Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure()));
         }
+    }
+    
+    public void playGame() {
+        loadBoard();
+           
+        do {
+            // Draw the maze
+            drawBoard();
+            
+            // Check to see if the player encountered anything
+            checkBoard();
+
+            // Get the player's move
+            getMove();
+
+            // Validate the move and move accordingly
+            if (validMove(move)) {
+
+              // Move the Player   
+              if (move == 'U') {
+                  player.moveUp();
+              }
+
+              if (move == 'D') {
+                  player.moveDown();
+              }
+
+              if (move == 'L') {
+                  player.moveLeft();
+              }
+
+              if (move == 'R') {
+                  player.moveRight();
+              }
+            }
+
+        } while (!gameOver && move != 'Q');
+        
         System.out.println("Thank you for playing our Maze game.");
     }
     

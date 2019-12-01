@@ -16,10 +16,9 @@ public class Player {
     public int healthPoint;
     
     public Player(){
-        this.row_pos = row_pos;
-        this.col_pos = col_pos;
-        this.player = player;
-        this.healthPoint = healthPoint;
+        row_pos = 0;
+        col_pos = 0;
+        healthPoint = 10;
     }
 
     public int getRow_pos() {

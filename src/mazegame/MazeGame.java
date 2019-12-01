@@ -17,5 +17,6 @@ public class MazeGame {
     public static void main(String[] args) {
         // TODO code application logic here
         Maze m1 = new Maze(10, 10);
+        m1.playGame();
     }
 }
