@@ -55,7 +55,73 @@ public class Maze {
     }
     
     public void generateMaze() {
-        // TODO: Allow rooms to connect to other rooms
+        int currentRow = 0;
+        int currentCol = 0;
+        
+        while ((Board[num_rows-1][num_cols-1].validDirections & 1<<4) != 1<<4) {
+            Set<Integer> validDirections = new HashSet<>();
+            
+            // Up
+            if ((Board[currentRow][currentCol].validDirections & 1<<3) == 1<<3)
+                validDirections.add(0);
+                 
+            // Down
+            if ((Board[currentRow][currentCol].validDirections & 1<<2) == 1<<2)
+                validDirections.add(1);
+            
+            // Right
+            if ((Board[currentRow][currentCol].validDirections & 1<<1) == 1<<1)
+                validDirections.add(2);
+            
+            // Left
+            if ((Board[currentRow][currentCol].validDirections & 1) == 1)
+                validDirections.add(3);
+            
+            
+            int randomDirection = new Random().nextInt(validDirections.size());
+            
+            int i = 0;
+            int direction = -1;
+            for (Object obj : validDirections) {
+                if (i==randomDirection)
+                    direction = (int) obj;
+                ++i;
+            }
+            
+            Room temp;
+            switch (direction) {
+                case 0:
+                    temp = Board[currentRow-1][currentCol];
+                    temp.validDirections &= ~(1<<2);
+                    Board[currentRow][currentCol].enableMove(0);
+                    temp.enableMove(1);
+                    currentRow -= 1;
+                    break;
+                case 1:
+                    temp = Board[currentRow+1][currentCol];
+                    temp.validDirections &= ~(1<<3);
+                    Board[currentRow][currentCol].enableMove(1);
+                    temp.enableMove(0);
+                    currentRow += 1;
+                    break;
+                case 2:
+                    temp = Board[currentRow][currentCol+1];
+                    temp.validDirections &= ~(1);
+                    Board[currentRow][currentCol].enableMove(2);
+                    temp.enableMove(3);
+                    currentCol += 1;
+                    break;
+                case 3:
+                    temp = Board[currentRow][currentCol-1];
+                    temp.validDirections &= ~(1<<1);
+                    Board[currentRow][currentCol].enableMove(3);
+                    temp.enableMove(2);
+                    currentCol -= 1;
+                    break;
+            }
+            
+            Board[currentRow][currentCol].validDirections |= 1<<4;
+        }
     }
     
     public void drawBoard() {
@@ -68,12 +134,13 @@ public class Maze {
         
         System.out.println("-");
         
+        System.out.print("|");
         // Outer loop to print rows.
         for (int row = 0; row < num_rows; row++) {
             
             // Inner loop to print columns
             for (int col = 0; col < num_cols; col++) {
-                System.out.print("| ");
+                
                 
                 // Player
                 if (row == row_pos && col == col_pos) {
@@ -117,18 +184,26 @@ public class Maze {
                     System.out.print("████ ");
                 }
                 
-                
+                if (!Board[row][col].moveRight || !(abs(row-row_pos) < 2 && abs(col-col_pos) < 2))
+                    System.out.print(" |");
+                else {
+                    System.out.print("  ");
+                }
                 
             }
             
-            System.out.println("|");
-
-            for (int i = 0; i < num_cols * 4; i++) {
-                System.out.print("--");
+            System.out.println("");
+            
+            for (int i = 0; i < num_cols; i++) {
+                if (!Board[row][i].moveDown || !(abs(row-row_pos) < 2 && abs(i-col_pos) < 2))
+                    System.out.print("--------");
+                else
+                    System.out.print("        ");
             }
             
             System.out.println("-");
-        
+            
+            System.out.print(row==num_rows-1 ? "" : "|");
         }                   
     }
     
@@ -143,6 +218,22 @@ public class Maze {
                 Traps[row][col] = new Trap();
                 Stores[row][col] = new Store();
             }            
+        }
+        
+        for (int row = 0; row < num_rows;  row++) {
+            for (int col = 0; col < num_cols; col++) {
+                if (row > 0)
+                    Board[row][col].validDirections |= 1<<3;
+                
+                if (row < num_rows-1)
+                    Board[row][col].validDirections |= 1<<2;
+                
+                if (col > 0)
+                    Board[row][col].validDirections |= 1;
+                
+                if (col < num_cols-1)
+                    Board[row][col].validDirections |= 1<<1;
+            }
         }
      
         
@@ -191,19 +282,19 @@ public class Maze {
     public Boolean validMove(char direction) {
         Boolean isValid = false;
         
-        if (direction == 'U' && player.getRow_pos() > 0) {
+        if (direction == 'U' && Board[player.getRow_pos()][player.getCol_pos()].moveUp) {
             isValid = true;
         }
         
-        if (direction == 'D' && player.getCol_pos() < num_rows - 1) {
+        if (direction == 'D' && Board[player.getRow_pos()][player.getCol_pos()].moveDown) {
             isValid = true;
         }
 
-        if (direction == 'L' && player.getCol_pos() > 0) {
+        if (direction == 'L' && Board[player.getRow_pos()][player.getCol_pos()].moveLeft) {
             isValid = true;
         }
 
-        if (direction == 'R' && player.getCol_pos() < num_cols - 1) {
+        if (direction == 'R' && Board[player.getRow_pos()][player.getCol_pos()].moveRight) {
             isValid = true;
         }
         
@@ -336,6 +427,8 @@ public class Maze {
               if (move == 'R') {
                   player.moveRight();
               }
+            } else {
+                System.out.println("That is not a valid move.");
             }
 
         } while (!gameOver && move != 'Q');

@@ -14,6 +14,7 @@ public class Room {
     public boolean moveDown;
     public boolean moveRight;
     public boolean moveLeft;
+    public short validDirections;
     public int row_pos;
     public int col_pos;
     
@@ -22,6 +23,15 @@ public class Room {
         moveDown = false;
         moveRight = false;
         moveLeft = false;
+        validDirections = 00000;
+        // validDirections will be using bit maninpultation
+        /*
+        0 - most significant bit: modified
+        0 - up enabled
+        0 - down enabled
+        0 - right enabled
+        0 - left enabled
+        */
     }
     
     
