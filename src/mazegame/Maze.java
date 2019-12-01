@@ -10,6 +10,7 @@ package mazegame;
  * @author Can Lin & Marik Rogenski
  */
 // Test
+import static java.lang.Math.abs;
 import java.util.*;
 
 public class Maze {
@@ -51,7 +52,10 @@ public class Maze {
         Traps = new Trap[num_rows][num_cols];     // Z = Trap
         Stores = new Store[num_rows][num_cols]; // S = Store
         numInventory = 0;
-
+    }
+    
+    public void generateMaze() {
+        // TODO: Allow rooms to connect to other rooms
     }
     
     public void drawBoard() {
@@ -68,7 +72,7 @@ public class Maze {
         for (int row = 0; row < num_rows; row++) {
             
             // Inner loop to print columns
-            for (int col =0; col < num_cols; col++) {
+            for (int col = 0; col < num_cols; col++) {
                 System.out.print("| ");
                 
                 // Player
@@ -78,35 +82,42 @@ public class Maze {
                     System.out.print(" ");
                 }           
                 
-                // Tresures
-                if (Treasures[row][col].getTreasure() > 0) {
-                    System.out.print("T");
-                } else {
+                // Display blackness unless player is close:
+                if (abs(row-row_pos) < 2 && abs(col-col_pos) < 2) {
+                    // Tresures
+                    if (Treasures[row][col].getTreasure() > 0) {
+                        System.out.print("T");
+                    } else {
+                        System.out.print(" ");
+                    }     
+
+                    // Opponents
+                    if (Opponents[row][col].getOpponent() > 0) {
+                        System.out.print("O");
+                    } else {
+                        System.out.print(" ");
+                    } 
+
+                    // Traps
+                    if (Traps[row][col].getTrap() > 0) {
+                        System.out.print("Z");
+                    } else {
+                        System.out.print(" ");
+                    }                 
+
+                    // Stores
+                    if (Stores[row][col].getStore() > 0) {
+                        System.out.print("S");
+                    } else {
+                        System.out.print(" ");
+                    } 
+
                     System.out.print(" ");
-                }     
-                
-                // Opponents
-                if (Opponents[row][col].getOpponent() > 0) {
-                    System.out.print("O");
                 } else {
-                    System.out.print(" ");
-                } 
+                    System.out.print("████ ");
+                }
                 
-                // Traps
-                if (Traps[row][col].getTrap() > 0) {
-                    System.out.print("Z");
-                } else {
-                    System.out.print(" ");
-                }                 
                 
-                // Stores
-                if (Stores[row][col].getStore() > 0) {
-                    System.out.print("S");
-                } else {
-                    System.out.print(" ");
-                } 
-                
-                System.out.print(" ");
                 
             }
             
@@ -136,6 +147,7 @@ public class Maze {
      
         
         // Initialize the board
+        generateMaze();
         // Randomize Treasures.
         for(int i=0; i < ((num_rows+num_cols)/2*3/4); i++) {
             int rand_row = rand.nextInt(num_rows); 
@@ -165,11 +177,6 @@ public class Maze {
             Stores[rand_row][rand_col].setStore((num_rows+num_cols)/3);
         }
         
-        //Directions
-//        Board[0][0].moveRight = true;
-//        Board[0][1].moveDown = true;
-//        Board[1][1].moveDown = true;
-//        Board[2][1].moveLeft = true;
     }
     
     public void getMove() {
@@ -338,6 +345,7 @@ public class Maze {
     
 }
 
+// TODO: Move this to GitHub
 // Here's what I have done:
 // created several classes, changed 2D arrays to classes.
 // fixed some issues while changing 2D arrays to classes.
