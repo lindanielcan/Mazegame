@@ -25,19 +25,19 @@ public class Opponent {
         this.col_pos = col_pos;
         this.opponent = opponent;
     }
-    
+
     public int getOpponent() {
-        return opponent;        
+        return opponent;
     }
-    
+
     public void setOpponent(int howMany) {
         opponent = howMany;
     }
-    
+
     public void removeOpponent(int howMany) {
         opponent -= howMany;
     }
-    
+
     public int getValue() {
         return value;
     }
@@ -49,14 +49,14 @@ public class Opponent {
     public void setCol(int col_pos) {
         this.col_pos = col_pos;
     }
-    
+
     public Boolean isFound(int Row, int Col){
         return (row_pos == Row && col_pos == Col);
     }
-    
+
     public String showOpponent(int opponent) {
         String strOpponent = "";
-        
+
         switch (opponent) {
             case 1:
                 strOpponent = "Gnome";
@@ -81,10 +81,10 @@ public class Opponent {
                 break;
             case 8:
                 strOpponent = "Wizard";
-                break;            
+                break;
         }
-        
+
         return strOpponent;
-    }    
-    
+    }
+
 }
