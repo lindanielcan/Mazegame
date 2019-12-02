@@ -17,7 +17,7 @@ public class Room {
     public short validDirections;
     public int row_pos;
     public int col_pos;
-    
+
     public Room() {
         moveUp = false;
         moveDown = false;
@@ -33,8 +33,7 @@ public class Room {
         0 - left enabled
         */
     }
-    
-    
+  
     /**
      * @param m which move to enable
      * 0 - up
@@ -42,6 +41,7 @@ public class Room {
      * 2 - right
      * 3 - left
      * 
+     *
      * This function is used in order to enable directional moves as the maze is generated.
     */
     public void enableMove(int m) {

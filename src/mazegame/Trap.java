@@ -25,19 +25,19 @@ public class Trap {
         this.col_pos = col_pos;
         this.trap = trap;
     }
-    
+
     public int getTrap() {
-        return trap;        
+        return trap;
     }
-    
+
     public void setTrap(int howMany) {
         trap = howMany;
     }
-    
+
     public void removeTrap(int howMany) {
         trap -= howMany;
     }
-    
+
     public int getValue() {
         return value;
     }
@@ -49,7 +49,7 @@ public class Trap {
     public void setCol(int col_pos) {
         this.col_pos = col_pos;
     }
-    
+
     public Boolean isFound(int Row, int Col){
         return (row_pos == Row && col_pos == Col);
     }

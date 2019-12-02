@@ -19,7 +19,7 @@ public class Treasure {
     public int row_pos;
     public int col_pos;
     public int treasure;
-    
+
     public Treasure() {
         this.treasure = treasure;
         this.value = value;
@@ -31,17 +31,17 @@ public class Treasure {
         return treasure;
 //        Random rand = new Random();
 //        int treasure = rand.nextInt(8);
-//        return (treasure+1);        
+//        return (treasure+1);
     }
-    
+
     public void setTreasure(int howMany) {
         treasure = howMany;
     }
-    
+
     public void removeTreasure(int howMany) {
         treasure -= howMany;
     }
-    
+
     public int getValue() {
         return value;
     }
@@ -61,44 +61,44 @@ public class Treasure {
     public int getCol_pos() {
         return col_pos;
     }
-    
-    
-    
+
+
+
     public Boolean isFound(int Row, int Col){
         return (row_pos == Row && col_pos == Col);
     }
-    
-    
+
+
     public String showTreasure(int type) {
         String strTreasure = "";
-        
+
         switch (type) {
             case 1:
-                strTreasure = "Jewel";
+                strTreasure = "Bow";
                 break;
             case 2:
                 strTreasure = "Sword";
                 break;
             case 3:
-                strTreasure = "Potion";
+                strTreasure = "Health Potion";
                 break;
             case 4:
-                strTreasure = "Map";
+                strTreasure = "Spear";
                 break;
             case 5:
-                strTreasure = "Key";
+                strTreasure = "Wand";
                 break;
             case 6:
-                strTreasure = "Shield";
+                strTreasure = "Dagger";
                 break;
             case 7:
-                strTreasure = "Armor";
+                strTreasure = "AK47";
                 break;
             case 8:
-                strTreasure = "Torch";
-                break;            
+                strTreasure = "Grenade";
+                break;
         }
-        
+
         return strTreasure;
     }
 }
