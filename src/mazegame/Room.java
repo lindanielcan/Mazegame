@@ -33,14 +33,14 @@ public class Room {
         0 - left enabled
         */
     }
-
-
+  
     /**
      * @param m which move to enable
      * 0 - up
      * 1 - down
      * 2 - right
      * 3 - left
+     * 
      *
      * This function is used in order to enable directional moves as the maze is generated.
     */

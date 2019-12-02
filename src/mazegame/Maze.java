@@ -52,9 +52,78 @@ public class Maze {
         Traps = new Trap[num_rows][num_cols];     // Z = Trap
         Stores = new Store[num_rows][num_cols]; // S = Store
         numInventory = 0;
+    }
+    
+    public void generateMaze() {
+        int currentRow = 0;
+        int currentCol = 0;
+        
+        while ((Board[num_rows-1][num_cols-1].validDirections & 1<<4) != 1<<4) {
+            Set<Integer> validDirections = new HashSet<>();
+            
+            // Up
+            if ((Board[currentRow][currentCol].validDirections & 1<<3) == 1<<3)
+                validDirections.add(0);
+                 
+            // Down
+            if ((Board[currentRow][currentCol].validDirections & 1<<2) == 1<<2)
+                validDirections.add(1);
+            
+            // Right
+            if ((Board[currentRow][currentCol].validDirections & 1<<1) == 1<<1)
+                validDirections.add(2);
+            
+            // Left
+            if ((Board[currentRow][currentCol].validDirections & 1) == 1)
+                validDirections.add(3);
+            
+            
+            int randomDirection = new Random().nextInt(validDirections.size());
+            
+            int i = 0;
+            int direction = -1;
+            for (Object obj : validDirections) {
+                if (i==randomDirection)
+                    direction = (int) obj;
+                ++i;
+            }
+            
+            Room temp;
+            switch (direction) {
+                case 0:
+                    temp = Board[currentRow-1][currentCol];
+                    temp.validDirections &= ~(1<<2);
+                    Board[currentRow][currentCol].enableMove(0);
+                    temp.enableMove(1);
+                    currentRow -= 1;
+                    break;
+                case 1:
+                    temp = Board[currentRow+1][currentCol];
+                    temp.validDirections &= ~(1<<3);
+                    Board[currentRow][currentCol].enableMove(1);
+                    temp.enableMove(0);
+                    currentRow += 1;
+                    break;
+                case 2:
+                    temp = Board[currentRow][currentCol+1];
+                    temp.validDirections &= ~(1);
+                    Board[currentRow][currentCol].enableMove(2);
+                    temp.enableMove(3);
+                    currentCol += 1;
+                    break;
+                case 3:
+                    temp = Board[currentRow][currentCol-1];
+                    temp.validDirections &= ~(1<<1);
+                    Board[currentRow][currentCol].enableMove(3);
+                    temp.enableMove(2);
+                    currentCol -= 1;
+                    break;
+            }
+            
+            Board[currentRow][currentCol].validDirections |= 1<<4;
+        }
         player.chanceOfCelocate = (max_rows+max_cols)/2;
         player.coin = (max_rows+max_cols);
-
     }
 
     public void generateMaze() {
@@ -136,22 +205,19 @@ public class Maze {
         }
 
         System.out.println("-");
-
         System.out.print("|");
+      
         // Outer loop to print rows.
         for (int row = 0; row < num_rows; row++) {
 
             // Inner loop to print columns
             for (int col = 0; col < num_cols; col++) {
-
-
                 // Player
                 if (row == row_pos && col == col_pos) {
                     System.out.print("P");
                 } else {
                     System.out.print(" ");
                 }
-
                 // Display blackness unless player is close:
                 if (abs(row-row_pos) < 2 && abs(col-col_pos) < 2) {
                     // Tresures
@@ -186,17 +252,17 @@ public class Maze {
                 } else {
                     System.out.print("████ ");
                 }
-
+              
                 if (!Board[row][col].moveRight || !(abs(row-row_pos) < 2 && abs(col-col_pos) < 2))
                     System.out.print(" |");
                 else {
                     System.out.print("  ");
                 }
-
+                
             }
-
+            
             System.out.println("");
-
+          
             for (int i = 0; i < num_cols; i++) {
                 if (!Board[row][i].moveDown || !(abs(row-row_pos) < 2 && abs(i-col_pos) < 2))
                     System.out.print("--------");
@@ -205,7 +271,7 @@ public class Maze {
             }
 
             System.out.println("-");
-
+            
             System.out.print(row==num_rows-1 ? "" : "|");
         }
     }
@@ -238,8 +304,23 @@ public class Maze {
                     Board[row][col].validDirections |= 1<<1;
             }
         }
-
-
+        
+        for (int row = 0; row < num_rows;  row++) {
+            for (int col = 0; col < num_cols; col++) {
+                if (row > 0)
+                    Board[row][col].validDirections |= 1<<3;
+                
+                if (row < num_rows-1)
+                    Board[row][col].validDirections |= 1<<2;
+                
+                if (col > 0)
+                    Board[row][col].validDirections |= 1;
+                
+                if (col < num_cols-1)
+                    Board[row][col].validDirections |= 1<<1;
+            }
+        }
+      
         // Initialize the board
         generateMaze();
         // Randomize Treasures.
@@ -271,7 +352,11 @@ public class Maze {
             int rand_col = rand.nextInt(num_cols);
             Stores[rand_row][rand_col].setStore((num_rows+num_cols)/3);
         }
-
+        Treasures[num_rows-1][num_cols-1].setTreasure(0);
+        Traps[num_rows-1][num_cols-1].setTrap(0);
+        Opponents[num_rows-1][num_cols-1].setOpponent(0);
+        Stores[num_rows-1][num_cols-1].setStore(0);
+        
     }
 
     public void getMove() {
@@ -285,11 +370,10 @@ public class Maze {
 
     public Boolean validMove(char direction) {
         Boolean isValid = false;
-
+        
         if (direction == 'U' && Board[player.getRow_pos()][player.getCol_pos()].moveUp) {
             isValid = true;
         }
-
         if (direction == 'D' && Board[player.getRow_pos()][player.getCol_pos()].moveDown) {
             isValid = true;
         }
@@ -735,6 +819,11 @@ public class Maze {
         if (Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure() > 0) {
             System.out.println("You have found a " + Treasures[0][0].showTreasure(Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure()));
         }
+        
+        if (player.getRow_pos() == num_rows-1 && player.getCol_pos() == num_cols-1) {
+            System.out.println("You have beat the game!");
+            gameOver = true;
+          
         if (Stores[player.getRow_pos()][player.getCol_pos()].getStore()>0){
             System.out.println("You have encountered a store, You can buy the following item from the store: ");
             System.out.println("Type ");
@@ -798,6 +887,7 @@ public class Maze {
             Opponents[player.getRow_pos()][player.getCol_pos()].getOpponent()) + "\tYou can type F to fight it."
                     + "\tIn order to defeat it, You need to have a " + Treasures[player.getRow_pos()][player.getCol_pos()].showTreasure(8));
             }
+          
         }
     }
 
@@ -805,6 +895,9 @@ public class Maze {
         loadBoard();
 
         do {
+            // Draw the maze
+            drawBoard();
+          
             System.out.println("In order to win, you need your score above " + (num_rows+num_cols)*2 +
                     ", and get to the room in the bottom right.");
             System.out.println("Your score: " + player.score + "   Your health point:" + player.healthPoint
@@ -817,7 +910,6 @@ public class Maze {
             checkBoard();
             // Draw the maze
             drawBoard();
-
 
             // Get the player's move
             getMove();
@@ -840,18 +932,20 @@ public class Maze {
               if (move == 'R') {
                   player.moveRight();
               }
+              
               if((move == 'U' || move == 'D' || move == 'L' || move == 'R')&&player.getRow_pos()==9
                       && player.getCol_pos() == 9 && player.score >= (num_rows+num_cols)*2){
                   System.out.println("You win");
                   gameOver = true;
                   drawBoard();
               }
-              //if((move == 'U' || move == 'D' || move == 'L' || move == 'R') && Opponents[row_pos][col_pos].getOpponent() > 0){
-                //System.out.println("here");
-              //}
+              
             } else {
                 System.out.println("That is not a valid move.");
             }
+            
+            // Check to see if the player encountered anything
+            checkBoard();
 
         } while (!gameOver && move != 'Q');
 
