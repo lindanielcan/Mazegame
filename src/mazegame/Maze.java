@@ -268,6 +268,11 @@ public class Maze {
             Stores[rand_row][rand_col].setStore((num_rows+num_cols)/3);
         }
         
+        Treasures[num_rows-1][num_cols-1].setTreasure(0);
+        Traps[num_rows-1][num_cols-1].setTrap(0);
+        Opponents[num_rows-1][num_cols-1].setOpponent(0);
+        Stores[num_rows-1][num_cols-1].setStore(0);
+        
     }
     
     public void getMove() {
@@ -393,6 +398,11 @@ public class Maze {
         if (Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure() > 0) {
             System.out.println("You have found a " + Treasures[0][0].showTreasure(Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure()));
         }
+        
+        if (player.getRow_pos() == num_rows-1 && player.getCol_pos() == num_cols-1) {
+            System.out.println("You have beat the game!");
+            gameOver = true;
+        }
     }
     
     public void playGame() {
@@ -401,9 +411,6 @@ public class Maze {
         do {
             // Draw the maze
             drawBoard();
-            
-            // Check to see if the player encountered anything
-            checkBoard();
 
             // Get the player's move
             getMove();
@@ -430,6 +437,9 @@ public class Maze {
             } else {
                 System.out.println("That is not a valid move.");
             }
+            
+            // Check to see if the player encountered anything
+            checkBoard();
 
         } while (!gameOver && move != 'Q');
         
