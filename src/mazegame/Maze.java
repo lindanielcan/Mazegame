@@ -122,78 +122,8 @@ public class Maze {
             
             Board[currentRow][currentCol].validDirections |= 1<<4;
         }
-        player.chanceOfCelocate = (max_rows+max_cols)/2;
-        player.coin = (max_rows+max_cols);
-    }
-
-    public void generateMaze() {
-        int currentRow = 0;
-        int currentCol = 0;
-
-        while ((Board[num_rows-1][num_cols-1].validDirections & 1<<4) != 1<<4) {
-            Set<Integer> validDirections = new HashSet<>();
-
-            // Up
-            if ((Board[currentRow][currentCol].validDirections & 1<<3) == 1<<3)
-                validDirections.add(0);
-
-            // Down
-            if ((Board[currentRow][currentCol].validDirections & 1<<2) == 1<<2)
-                validDirections.add(1);
-
-            // Right
-            if ((Board[currentRow][currentCol].validDirections & 1<<1) == 1<<1)
-                validDirections.add(2);
-
-            // Left
-            if ((Board[currentRow][currentCol].validDirections & 1) == 1)
-                validDirections.add(3);
-
-
-            int randomDirection = new Random().nextInt(validDirections.size());
-
-            int i = 0;
-            int direction = -1;
-            for (Object obj : validDirections) {
-                if (i==randomDirection)
-                    direction = (int) obj;
-                ++i;
-            }
-
-            Room temp;
-            switch (direction) {
-                case 0:
-                    temp = Board[currentRow-1][currentCol];
-                    temp.validDirections &= ~(1<<2);
-                    Board[currentRow][currentCol].enableMove(0);
-                    temp.enableMove(1);
-                    currentRow -= 1;
-                    break;
-                case 1:
-                    temp = Board[currentRow+1][currentCol];
-                    temp.validDirections &= ~(1<<3);
-                    Board[currentRow][currentCol].enableMove(1);
-                    temp.enableMove(0);
-                    currentRow += 1;
-                    break;
-                case 2:
-                    temp = Board[currentRow][currentCol+1];
-                    temp.validDirections &= ~(1);
-                    Board[currentRow][currentCol].enableMove(2);
-                    temp.enableMove(3);
-                    currentCol += 1;
-                    break;
-                case 3:
-                    temp = Board[currentRow][currentCol-1];
-                    temp.validDirections &= ~(1<<1);
-                    Board[currentRow][currentCol].enableMove(3);
-                    temp.enableMove(2);
-                    currentCol -= 1;
-                    break;
-            }
-
-            Board[currentRow][currentCol].validDirections |= 1<<4;
-        }
+        player.chanceOfCelocate = (num_rows+num_cols)/2;
+        player.coin = (num_rows+num_cols);
     }
 
     public void drawBoard() {
@@ -823,6 +753,7 @@ public class Maze {
         if (player.getRow_pos() == num_rows-1 && player.getCol_pos() == num_cols-1) {
             System.out.println("You have beat the game!");
             gameOver = true;
+        }
           
         if (Stores[player.getRow_pos()][player.getCol_pos()].getStore()>0){
             System.out.println("You have encountered a store, You can buy the following item from the store: ");
@@ -887,7 +818,6 @@ public class Maze {
             Opponents[player.getRow_pos()][player.getCol_pos()].getOpponent()) + "\tYou can type F to fight it."
                     + "\tIn order to defeat it, You need to have a " + Treasures[player.getRow_pos()][player.getCol_pos()].showTreasure(8));
             }
-          
         }
     }
 
@@ -908,8 +838,6 @@ public class Maze {
 
             // Check to see if the player encountered anything
             checkBoard();
-            // Draw the maze
-            drawBoard();
 
             // Get the player's move
             getMove();
