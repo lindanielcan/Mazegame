@@ -7,9 +7,8 @@ package mazegame;
 
 /**
  *
- * @author Can Lin & Marik Rogenski
+ * @author Can Lin and Marik Rogenski
  */
-// Test
 import static java.lang.Math.abs;
 import java.util.*;
 
@@ -17,14 +16,14 @@ public class Maze {
     Scanner input = new Scanner(System.in);
     Random rand = new Random();
 
-    public int num_rows; // = 10;
-    public int num_cols; // = 10;
+    public int num_rows;
+    public int num_cols;
 
-    protected Room[][] Board; //  = new Room[10][10];
-    protected Treasure[][] Treasures; // = new int[NUM_ROWS][NUM_COLS]; // T = Treasure
-    protected Opponent[][] Opponents; // = new int[NUM_ROWS][NUM_COLS]; // O = Opponent
-    protected Trap[][] Traps; // = new int[NUM_ROWS][NUM_COLS];     // Z = Trap
-    protected Store[][] Stores; // S = Store
+    protected Room[][] Board;
+    protected Treasure[][] Treasures;
+    protected Opponent[][] Opponents;
+    protected Trap[][] Traps;
+    protected Store[][] Stores;
     protected Player player = new Player();
 
     protected int[] Inventory = new int[100];
@@ -32,9 +31,6 @@ public class Maze {
 
     public Boolean gameOver = false;
 
-
-
-    //protected int[][] Player = new int[NUM_ROWS][NUM_COLS];
 
     private int row_pos;
     private int col_pos;
@@ -54,6 +50,11 @@ public class Maze {
         numInventory = 0;
     }
     
+    /**
+     * Responsible for creating the maze aspects of the maze.
+     * 
+     * Removes walls to create pathways for the player
+     */
     public void generateMaze() {
         int currentRow = 0;
         int currentCol = 0;
@@ -126,6 +127,12 @@ public class Maze {
         player.coin = (num_rows+num_cols);
     }
 
+    /**
+     * Responsible for creating the maze in the terminal.
+     * 
+     * Creates the maze with the correct walls, blacks out the maze when a player 
+     * is not close enough and places all the items throughout the maze.
+     */
     public void drawBoard() {
         col_pos = player.getCol_pos();
         row_pos = player.getRow_pos();
@@ -206,6 +213,9 @@ public class Maze {
         }
     }
 
+    /**
+     * Initializes the stores and items across the board.
+     */
     public void loadBoard() {
 
         // Initialize Rooms,Treasures,Opponent,Traps,Player,Store.
@@ -219,6 +229,7 @@ public class Maze {
             }
         }
 
+        // Checks which direction a player can move at the initialization of the maze.
         for (int row = 0; row < num_rows;  row++) {
             for (int col = 0; col < num_cols; col++) {
                 if (row > 0)
@@ -230,22 +241,6 @@ public class Maze {
                 if (col > 0)
                     Board[row][col].validDirections |= 1;
 
-                if (col < num_cols-1)
-                    Board[row][col].validDirections |= 1<<1;
-            }
-        }
-        
-        for (int row = 0; row < num_rows;  row++) {
-            for (int col = 0; col < num_cols; col++) {
-                if (row > 0)
-                    Board[row][col].validDirections |= 1<<3;
-                
-                if (row < num_rows-1)
-                    Board[row][col].validDirections |= 1<<2;
-                
-                if (col > 0)
-                    Board[row][col].validDirections |= 1;
-                
                 if (col < num_cols-1)
                     Board[row][col].validDirections |= 1<<1;
             }
@@ -289,6 +284,9 @@ public class Maze {
         
     }
 
+    /**
+     * Gets the player's move from the command line.
+     */
     public void getMove() {
         System.out.println("T for Treasure, Z for Trap, O for Opponent, S for Store and P for player.");
         System.out.print("Please enter your move (U-Up, D-Down, L-Left, R-Right, Q-Quit, T-Take, F-Fight, I-Show Inventory): ");
@@ -298,6 +296,11 @@ public class Maze {
 
     }
 
+    /**
+     * 
+     * @param direction a char that says which direction the player is trying to move
+     * @return a true or false value that states whether or not the move the player is trying to make is valid
+     */
     public Boolean validMove(char direction) {
         Boolean isValid = false;
         
@@ -357,11 +360,9 @@ public class Maze {
             gameOver = true;
 
         }
-
-
+        
+        // Instructions for fighting an opponent
         if (direction == 'F') {
-            //int randMonster = rand.nextInt(8);
-            //Opponents[player1[row_pos][col_pos].getRow_pos()][player1[row_pos][col_pos].getCol_pos()].setOpponent(randMonster+1);
             if (Opponents[row_pos][col_pos].getOpponent() > 0) {
                 // Fighting The Opponent
                 System.out.println("Fighting the " + Opponents[row_pos][col_pos].showOpponent
@@ -721,6 +722,10 @@ public class Maze {
         return isValid;
     }
 
+    /**
+     * Adds a certain item to your inventory
+     * @param type the item that you add to your inventory
+     */
     public void addInventory(int type) {
         int randomType = rand.nextInt(8);
         type = randomType;
@@ -732,7 +737,11 @@ public class Maze {
         Treasures[row_pos][col_pos].setTreasure(0);
     }
 
-
+    /**
+     * Checks to see if a certain item is in your inventory
+     * @param type the item to check the presence for in inventory
+     * @return true if item is in inventory, false otherwise
+     */
     public Boolean searchInventory(int type) {
         Boolean blnResult = false;
         for (int i = 0; i < numInventory; i++) {
@@ -745,6 +754,9 @@ public class Maze {
         return blnResult;
     }
 
+    /**
+     * Function checks to see if you have encountered anything in the board.
+    */
     public void checkBoard() {
         if (Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure() > 0) {
             System.out.println("You have found a " + Treasures[0][0].showTreasure(Treasures[player.getRow_pos()][player.getCol_pos()].getTreasure()));
@@ -821,6 +833,9 @@ public class Maze {
         }
     }
 
+    /**
+     * The function runs the game through a draw, check, move cycle.
+     */
     public void playGame() {
         loadBoard();
 
@@ -832,8 +847,6 @@ public class Maze {
                     ", and get to the room in the bottom right.");
             System.out.println("Your score: " + player.score + "   Your health point:" + player.healthPoint
             + "   your coin: " + player.coin);
-
-            //dSystem.out.println("Your position: "+ player.getRow_pos() + " " + player.getCol_pos());
 
 
             // Check to see if the player encountered anything
@@ -881,18 +894,3 @@ public class Maze {
     }
 
 }
-
-// TODO: Move this to GitHub
-// Here's what I have done:
-// created several classes, changed 2D arrays to classes.
-// fixed some issues while changing 2D arrays to classes.
-// fixed the issue with the truesure class, the player was not able to find the treasure, and the treasure was shown in a spot without "T".
-// Work on the opponent setting, can not work correctly so far. The player is unable to correctly determine whether the opponent exist in the spot.
-// fix the re-play issue,.. The player will enter y to play again when the game restart, and the player will return to (0,0) and see a new board.
-
-
-// Here's some issue I need to fix. Move them to the "Here's what I have done:" list once it's fixed.
-
-// fix InputMismatchException, the player receives the InputMismatchException when inputing invalid inputs..
-// store the location of treasure, get rid of T in Maze when the player takes the treasure.
-// Do the same thing about other three objects like how you did it with treasure.

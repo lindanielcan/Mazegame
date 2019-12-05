@@ -7,7 +7,7 @@ package mazegame;
 
 /**
  *
- * @author Can Lin & Marik Rogenski
+ * @author Can Lin and Marik Rogenski
  */
 public class Store {
     public int row_pos;
@@ -15,19 +15,29 @@ public class Store {
     public int store;
 
     public Store(){
-        this.row_pos = row_pos;
-        this.col_pos = col_pos;
-        this.store = store;
     }
 
+    /**
+     * 
+     * @return store number 
+     */
     public int getStore() {
         return store;
     }
 
+    /**
+     * 
+     * @param store number to set the store to
+     */
     public void setStore(int store) {
         this.store = store;
     }
 
+    /**
+     * 
+     * @param type the item's number
+     * @return the string that is attache to the item's number
+     */
     public String showItem(int type) {
         String strItem = "";
 
