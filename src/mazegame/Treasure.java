@@ -9,7 +9,7 @@ import java.util.Random;
 
 /**
  *
- * @author Can Lin & Marik Rogenski
+ * @author Can Lin and Marik Rogenski
  */
 public class Treasure {
     Random rand = new Random();
@@ -21,54 +21,87 @@ public class Treasure {
     public int treasure;
 
     public Treasure() {
-        this.treasure = treasure;
-        this.value = value;
-        this.row_pos = row_pos;
-        this.col_pos = col_pos;
     }
 
+    /**
+     * 
+     * @return value of the treasure
+     */
     public int getTreasure() {
         return treasure;
-//        Random rand = new Random();
-//        int treasure = rand.nextInt(8);
-//        return (treasure+1);
     }
 
+    /**
+     * 
+     * @param howMany the value of the treasure to be set
+     */
     public void setTreasure(int howMany) {
         treasure = howMany;
     }
 
+    /**
+     *
+     * @param howMany the treasure to remove from the cell
+     */
     public void removeTreasure(int howMany) {
         treasure -= howMany;
     }
 
+    /**
+     * 
+     * @return value of the treasure
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * 
+     * @param row_pos the new row of the treasure
+     */
     public void setRow(int row_pos) {
         this.row_pos = row_pos;
     }
 
+    /**
+     * 
+     * @param col_pos the new col of the treasure
+     */
     public void setCol(int col_pos) {
         this.col_pos = col_pos;
     }
 
+    /**
+     * 
+     * @return the row pos of the treasure
+     */
     public int getRow_pos() {
         return row_pos;
     }
 
+    /**
+     * 
+     * @return the col position of the treasure
+     */
     public int getCol_pos() {
         return col_pos;
     }
 
-
-
+    /**
+     * 
+     * @param Row the row to be tested for treasure
+     * @param Col the col to be tested for treasure
+     * @return true if treasure is located at the Row and Col
+     */
     public Boolean isFound(int Row, int Col){
         return (row_pos == Row && col_pos == Col);
     }
 
-
+    /**
+     * 
+     * @param type value of the treasure
+     * @return the string that is attached to the value of the treasure
+     */
     public String showTreasure(int type) {
         String strTreasure = "";
 

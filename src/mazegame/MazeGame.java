@@ -7,7 +7,7 @@ package mazegame;
 
 /**
  *
- * @author Can Lin & Marik Rogenski
+ * @author Can Lin and Marik Rogenski
  */
 public class MazeGame {
 
@@ -15,7 +15,7 @@ public class MazeGame {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // Creates 10x10 maze & plays the game
         Maze m1 = new Maze(10, 10);
         m1.playGame();
     }

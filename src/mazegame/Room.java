@@ -7,7 +7,7 @@ package mazegame;
 
 /**
  *
- * @author Can Lin & Marik Rogenski
+ * @author Can Lin and Marik Rogenski
  */
 public class Room {
     public boolean moveUp;
@@ -24,6 +24,7 @@ public class Room {
         moveRight = false;
         moveLeft = false;
         validDirections = 00000;
+        
         // validDirections will be using bit maninpultation
         /*
         0 - most significant bit: modified
@@ -61,10 +62,18 @@ public class Room {
         }
     }
 
+    /**
+     * 
+     * @return row position of room
+     */
     public int getRow_pos() {
         return row_pos;
     }
 
+    /**
+     * 
+     * @return col position of room
+     */
     public int getCol_pos() {
         return col_pos;
     }

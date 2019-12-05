@@ -7,7 +7,7 @@ package mazegame;
 
 /**
  *
- * @author Can Lin & Marik Rogenski
+ * @author Can Lin and Marik Rogenski
  */
 public class Opponent {
     public int type;
@@ -18,26 +18,36 @@ public class Opponent {
     public int opponent;
 
     public Opponent() {
-        this.type = type;
-        this.name = name;
-        this.value = value;
-        this.row_pos = row_pos;
-        this.col_pos = col_pos;
-        this.opponent = opponent;
     }
 
+    /**
+     * 
+     * @return the opponent contained at a certain cell
+     */
     public int getOpponent() {
         return opponent;
     }
 
+    /**
+     * Sets the opponent at a cell
+     * @param howMany the value of the opponent to add
+     */
     public void setOpponent(int howMany) {
         opponent = howMany;
     }
 
+    /**
+     * Removes the opponent at a cell
+     * @param howMany the value of the opponent to remove
+     */
     public void removeOpponent(int howMany) {
         opponent -= howMany;
     }
 
+    /**
+     * 
+     * @return the value of the opponent at the cell
+     */
     public int getValue() {
         return value;
     }
@@ -50,10 +60,21 @@ public class Opponent {
         this.col_pos = col_pos;
     }
 
+    /**
+     * 
+     * @param Row the row to search
+     * @param Col the col to search
+     * @return true if an opponent is at the cell
+     */
     public Boolean isFound(int Row, int Col){
         return (row_pos == Row && col_pos == Col);
     }
 
+    /**
+     * 
+     * @param opponent value to transform to a string
+     * @return string of the opponent's name
+     */
     public String showOpponent(int opponent) {
         String strOpponent = "";
 
