@@ -286,13 +286,23 @@ public class Maze {
 
     /**
      * Gets the player's move from the command line.
+     * 
+     * Note: we can suppress the infinite recursion warning because it will not ever actually cause infinite recursion
      */
+    @SuppressWarnings("InfiniteRecursion")
     public void getMove() {
         System.out.println("T for Treasure, Z for Trap, O for Opponent, S for Store and P for player.");
         System.out.print("Please enter your move (U-Up, D-Down, L-Left, R-Right, Q-Quit, T-Take, F-Fight, I-Show Inventory): ");
 
-        move = input.next(".").charAt(0);
-        move = Character.toUpperCase(move);
+        // Catches an error if you enter something like "asdfa"
+        try {
+            move = input.next(".").charAt(0);
+            move = Character.toUpperCase(move);
+        } catch(InputMismatchException e) {
+            System.out.println("Unexpected character! Try again!");
+            input = new Scanner(System.in);
+            getMove();
+        }
 
     }
 
